@@ -1,71 +1,70 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-echo -n "[📛] Enter your project name (e.g. golang): "
-read NAME
+read -p "[📛] Enter your project name (e.g. golang): " project_name
 
-SAFE_NAME=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9_-')
-START_FILE="start-${SAFE_NAME}.sh"
-STOP_FILE="stop-${SAFE_NAME}.sh"
+START_SCRIPT="start-$project_name.sh"
+STOP_SCRIPT="stop-$project_name.sh"
 
-# --- Finalized START script ---
-cat > "$START_FILE" <<EOF
+cat > "$START_SCRIPT" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 
-SESSION_NAME=$SAFE_NAME
-PROJECT_DIR="\$(dirname "\$(realpath "\$0")")"
-VENV_DIR="\$PROJECT_DIR/.venv"
+SESSION_NAME="$project_name"
+PROJECT_DIR="\$(pwd)"
 LOG_DIR="\$PROJECT_DIR/log"
 
 mkdir -p "\$LOG_DIR"
 
-# Check for existing session
+LOG_INDEX=\$(printf "%03d" \$(( \$(ls "\$LOG_DIR" | wc -l) + 1 )))
+LOG_FILE="\$LOG_DIR/session-\$LOG_INDEX.log"
+
 if tmux has-session -t "\$SESSION_NAME" 2>/dev/null; then
-  echo "[⚠️] Tmux session '\$SESSION_NAME' already running. Attaching..."
-  tmux attach -t "\$SESSION_NAME"
+  echo "[⚠️] Session '\$SESSION_NAME' already exists. Use 'tmux attach -t \$SESSION_NAME'"
+  exit 1
+fi
+
+echo "[🚀] Starting tmux session: \$SESSION_NAME"
+script -q -f "\$LOG_FILE" --command "tmux new-session -s '\$SESSION_NAME' \\
+  'python -m venv .venv && \\
+   source .venv/bin/activate && \\
+   echo \"[💡] Python now pointing to: \\\$(which python)\" && \\
+   exec bash'"
+
+EOF
+
+cat > "$STOP_SCRIPT" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+
+SESSION_NAME="$project_name"
+PROJECT_DIR="\$(pwd)"
+LOG_DIR="\$PROJECT_DIR/log"
+
+if tmux has-session -t "\$SESSION_NAME" 2>/dev/null; then
+  echo "[🛑] Stopping tmux session: \$SESSION_NAME"
+  tmux kill-session -t "\$SESSION_NAME"
+  echo "[✅] Session stopped."
+else
+  echo "[⚠️] No tmux session named '\$SESSION_NAME' is currently running."
   exit 0
 fi
 
-# Activate logging with new index
-LOG_INDEX=\$(find "\$LOG_DIR" -type f -name "session-*.log" | wc -l)
-LOG_FILE="\$LOG_DIR/session-\$(printf "%03d" \$((LOG_INDEX + 1))).log"
-
-TMUX_COMMAND="cd '\$PROJECT_DIR' && source '\$VENV_DIR/bin/activate' && exec bash"
-tmux new-session -d -s "\$SESSION_NAME" "script -f '\$LOG_FILE' -c '\$TMUX_COMMAND'"
-tmux attach -t "\$SESSION_NAME"
-EOF
-
-# --- Finalized STOP script ---
-cat > "$STOP_FILE" <<EOF
-#!/data/data/com.termux/files/usr/bin/bash
-
-SESSION_NAME=$SAFE_NAME
-PROJECT_DIR="\$(dirname "\$(realpath "\$0")")"
-
-if [ -n "\$TMUX" ]; then
-  echo "[⚠️] You're inside tmux. Please detach first (Ctrl+b then d)."
-  exit 1
-fi
-
-if ! tmux has-session -t "\$SESSION_NAME" 2>/dev/null; then
-  echo "[⚠️] No tmux session named '\$SESSION_NAME' is currently running."
-  exit 1
-fi
-
-echo "[🛑] Stopping tmux session: \$SESSION_NAME"
-tmux kill-session -t "\$SESSION_NAME"
-echo "[✅] Session stopped."
-
-# Deactivate lingering venv if active
-PYTHON_PATH=\$(which python)
-if echo "\$PYTHON_PATH" | grep -q "\$PROJECT_DIR/.venv"; then
-  echo "[🧹] Deactivating lingering venv..."
+if [[ -n "\$VIRTUAL_ENV" ]]; then
   deactivate 2>/dev/null
 fi
 EOF
 
-# Make executable
-chmod +x "$START_FILE" "$STOP_FILE"
+chmod +x "$START_SCRIPT" "$STOP_SCRIPT"
 
-echo "[✅] Generated: $START_FILE & $STOP_FILE"
+# Tutorial singkat sebelum hapus diri
+echo ""
+echo "[📖] Tutorial Singkat:"
+echo " • Untuk menjalankan project: ./start-$project_name.sh"
+echo " • Setelah masuk tmux: tekan Ctrl+B lalu D (detach)"
+echo " • Untuk kembali ke session: tmux attach -t $project_name"
+echo " • Untuk keluar dan mematikan semuanya: ./stop-$project_name.sh"
+echo " • Untuk push 1 file: git add nama_file && git commit -m '...' && git push"
+echo ""
+
+# Auto-remove this script
+echo "[✅] Generated: $START_SCRIPT & $STOP_SCRIPT"
 echo "[🧨] Removing generator script..."
-rm -- "\${0}"
+rm -- "\$0"
