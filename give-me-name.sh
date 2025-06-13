@@ -1,70 +1,107 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-read -p "[📛] Enter your project name (e.g. golang): " project_name
+# ANSI color
+BOLD="\e[1m"
+RESET="\e[0m"
+YELLOW="\e[33m"
+GREEN="\e[32m"
+RED="\e[31m"
+BLUE="\e[34m"
+CYAN="\e[36m"
 
-START_SCRIPT="start-$project_name.sh"
-STOP_SCRIPT="stop-$project_name.sh"
+# Ask for project name
+echo -e "${CYAN}[📛] Masukkan nama proyek Anda (misal: golang, react, flask):${RESET}"
+read -r project
 
-cat > "$START_SCRIPT" <<EOF
+start_script="start-$project.sh"
+stop_script="stop-$project.sh"
+log_dir="./log"
+
+# === START SCRIPT ===
+cat > "$start_script" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 
-SESSION_NAME="$project_name"
-PROJECT_DIR="\$(pwd)"
-LOG_DIR="\$PROJECT_DIR/log"
+SESSION="$project"
+LOG_DIR="./log"
+LOG_FILE="\$LOG_DIR/session-\$(printf "%03d" \$((\$(ls -1q \$LOG_DIR/session-*.log 2>/dev/null | wc -l)+1))).log"
 
 mkdir -p "\$LOG_DIR"
 
-LOG_INDEX=\$(printf "%03d" \$(( \$(ls "\$LOG_DIR" | wc -l) + 1 )))
-LOG_FILE="\$LOG_DIR/session-\$LOG_INDEX.log"
+echo -e "${GREEN}[🚀] Memulai sesi tmux: \$SESSION${RESET}"
+tmux new-session -d -s "\$SESSION" \\
+  "source .venv/bin/activate && exec script -q --flush --append \"\$LOG_FILE\""
 
-if tmux has-session -t "\$SESSION_NAME" 2>/dev/null; then
-  echo "[⚠️] Session '\$SESSION_NAME' already exists. Use 'tmux attach -t \$SESSION_NAME'"
-  exit 1
-fi
-
-echo "[🚀] Starting tmux session: \$SESSION_NAME"
-script -q -f "\$LOG_FILE" --command "tmux new-session -s '\$SESSION_NAME' \\
-  'python -m venv .venv && \\
-   source .venv/bin/activate && \\
-   echo \"[💡] Python now pointing to: \\\$(which python)\" && \\
-   exec bash'"
-
+sleep 1
+tmux attach-session -t "\$SESSION"
 EOF
 
-cat > "$STOP_SCRIPT" <<EOF
+# === STOP SCRIPT ===
+cat > "$stop_script" <<EOF
 #!/data/data/com.termux/files/usr/bin/bash
 
-SESSION_NAME="$project_name"
-PROJECT_DIR="\$(pwd)"
-LOG_DIR="\$PROJECT_DIR/log"
+SESSION="$project"
+LOG_DIR="./log"
 
-if tmux has-session -t "\$SESSION_NAME" 2>/dev/null; then
-  echo "[🛑] Stopping tmux session: \$SESSION_NAME"
-  tmux kill-session -t "\$SESSION_NAME"
-  echo "[✅] Session stopped."
+if tmux has-session -t "\$SESSION" 2>/dev/null; then
+  echo -e "${RED}[🛑] Menghentikan sesi tmux: \$SESSION${RESET}"
+  tmux kill-session -t "\$SESSION"
+  echo -e "${GREEN}[✅] Sesi dihentikan.${RESET}"
 else
-  echo "[⚠️] No tmux session named '\$SESSION_NAME' is currently running."
-  exit 0
+  echo -e "${YELLOW}[⚠️] Tidak ada sesi tmux bernama '\$SESSION'.${RESET}"
 fi
 
-if [[ -n "\$VIRTUAL_ENV" ]]; then
-  deactivate 2>/dev/null
-fi
+source .venv/bin/activate 2>/dev/null && deactivate
 EOF
 
-chmod +x "$START_SCRIPT" "$STOP_SCRIPT"
+# Buat bisa dieksekusi
+chmod +x "$start_script" "$stop_script"
 
-# Tutorial singkat sebelum hapus diri
-echo ""
-echo "[📖] Tutorial Singkat:"
-echo " • Untuk menjalankan project: ./start-$project_name.sh"
-echo " • Setelah masuk tmux: tekan Ctrl+B lalu D (detach)"
-echo " • Untuk kembali ke session: tmux attach -t $project_name"
-echo " • Untuk keluar dan mematikan semuanya: ./stop-$project_name.sh"
-echo " • Untuk push 1 file: git add nama_file && git commit -m '...' && git push"
-echo ""
+# === TUTORIAL ===
+echo -e "
+${YELLOW}${BOLD}[📖] Tutorial Lengkap: Menjalankan & Mengelola Proyek dengan Isolasi Sempurna${RESET}
+───────────────────────────────────────────────────────────────────────────────
+✔ Anda telah berhasil membuat dua skrip otomatis untuk proyek Anda:
 
-# Auto-remove this script
-echo "[✅] Generated: $START_SCRIPT & $STOP_SCRIPT"
-echo "[🧨] Removing generator script..."
-rm -- "\$0"
+   → ${BOLD}./$start_script${RESET}
+   → ${BOLD}./$stop_script${RESET}
+
+${BOLD}Langkah-langkah awal menjalankan proyek ini:${RESET}
+
+1. 🟢 ${BOLD}MENJALANKAN PROYEK (Start)${RESET}
+   Jalankan:
+       ${GREEN}./$start_script${RESET}
+   Ini akan:
+     • Membuat virtualenv lokal
+     • Memulai sesi tmux terisolasi
+     • Menyimpan seluruh aktivitas ke file log
+
+2. 🟡 ${BOLD}KELUAR SEMENTARA DARI SESI (Detach)${RESET}
+   Tekan:
+       ${CYAN}Ctrl + B lalu tekan D${RESET}
+   → Session tetap berjalan di background
+
+3. 🔄 ${BOLD}KEMBALI KE SESI (Reattach)${RESET}
+   Jalankan:
+       ${CYAN}tmux attach -t $project${RESET}
+   → Anda kembali ke sesi sebelumnya
+
+4. 🔴 ${BOLD}STOP PROYEK (Shutdown)${RESET}
+   Jalankan:
+       ${RED}./$stop_script${RESET}
+   → Ini akan mematikan tmux & venv
+
+5. ⬆ ${BOLD}GIT PUSH SATU FILE${RESET}
+   Gunakan:
+       ${BLUE}git add nama_file && git commit -m \"pesan\" && git push${RESET}
+
+───────────────────────────────────────────────────────────────────────────────
+💡 ${BOLD}Catatan:${RESET}
+ • Setiap proyek punya lingkungan virtual & shell yang terpisah total
+ • Semua log disimpan di ${CYAN}$log_dir/session-XXX.log${RESET}
+ • Cocok untuk Python, Go, PHP, React, NodeJS, dsb.
+"
+
+# Hapus diri sendiri
+SCRIPT_PATH="$(realpath "$0")"
+echo -e "${RED}[🧨] Menghapus skrip generator ini...${RESET}"
+rm -f "$SCRIPT_PATH"
