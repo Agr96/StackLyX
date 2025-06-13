@@ -136,7 +136,7 @@ echo -e " • Log disimpan otomatis untuk keperluan debugging atau jejak kerja."
 echo -e ""
 
 # ─── Ubah jadi executable & hapus diri sendiri ──────────────────────────────
-chmod +x "\$START" "\$STOP"
+chmod +x "$START" "$STOP"
 
 # Hapus diri sendiri
 SCRIPT_PATH="$(realpath "$0")"
