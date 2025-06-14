@@ -93,5 +93,6 @@ echo -e "  • Jalankan proyek menggunakan skrip di dalam core:"
 echo -e "      $START"
 echo -e "      $STOP"
 echo -e "  • Gunakan safe_update.sh di folder root proyek untuk update/rollback."
-cd ..
+echo -e "${YELLOW}[👉] Untuk masuk ke folder proyek, jalankan:${RESET}"
+echo -e "cd \"$PROJECT_DIR\""
 exit 0
