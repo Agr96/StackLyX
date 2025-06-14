@@ -1,1 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>StackLyX - Fast Role-based Runtime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+      color: #222;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+    h1, h2, h3 {
+      color: #0b5ed7;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #dee2e6;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    .center {
+      text-align: center;
+    }
+    .tagline {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #444;
+    }
+    .quote {
+      font-style: italic;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
 
+  <div class="center">
+    <img src="/images/banner.png" alt="StackLyX Banner">
+    <h1>⚡ StackLyX</h1>
+    <p class="tagline">Deploy. Minimal Resource. Done.</p>
+    <p><code>30-minute setup?</code> — No thanks. <br>Run real code in <strong>under 5 seconds</strong>, with zero bloat and full isolation.</p>
+  </div>
+
+  <hr>
+
+  <h2>🧠 What is StackLyX?</h2>
+  <p>
+    StackLyX is a <strong>runtime boot system</strong> focused on simplicity, speed, and separation of roles.
+    It’s designed for developers who want:
+  </p>
+  <ul>
+    <li>Real multi-language support without container overhead</li>
+    <li>Reusable, isolated environments (Python, Node, Go, Rust...)</li>
+    <li>Configurable “roles” (server, client, DB, etc.)</li>
+    <li>Safe upgrades and rollback, like a modern OS</li>
+  </ul>
+  <p class="quote">“StackLyX was born from frustration — and rebuilt as an ecosystem of fast-deployable roles that think modularly, not monolithically.”</p>
+
+  <h2>📂 Project Structure Overview</h2>
+  <pre>
+.
+├── start-crud.sh
+├── stop-crud.sh
+├── give_me_name.sh
+├── safe_update.sh
+├── /core_modules/
+│   ├── deps-installer-core.sh
+│   ├── deps-selector-core.sh
+├── /roles/
+│   └── server/python, nodejs, ...
+├── /system_core_do_not_change/
+│   └── *.core.sh
+├── /update_me_but_keep_data/
+│   └── ...
+└── /images/
+    └── banner.png
+  </pre>
+
+  <h2>🧩 Features You'll Love</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>🔧 Feature</th>
+        <th>💡 Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Role-Based Runtime</td><td>Each role (server, client, db) is its own universe</td></tr>
+      <tr><td>Multi-Language Ready</td><td>Python, Go, Node.js, Rust & more with isolation</td></tr>
+      <tr><td>Modular Start & Stop</td><td>Each role has its own lifecycle and logging</td></tr>
+      <tr><td>Smart Upgrade System</td><td>Keep your data, replace core safely</td></tr>
+      <tr><td>Auto YAML Logging</td><td>Track versions, logs, update compatibility</td></tr>
+      <tr><td>Safe Rollbacks</td><td>Undo changes instantly, like OS reset</td></tr>
+      <tr><td>Networking Mode</td><td>Port-forwarding / Docker bridge-like on demand</td></tr>
+      <tr><td>Fancy Reporting</td><td>Colorful CLI output with role + lang check</td></tr>
+    </tbody>
+  </table>
+
+  <h2>🛠 Quick Start</h2>
+  <pre>
+# Name your project
+bash give_me_name.sh
+
+# Start environment
+bash start-yourproject.sh
+
+# Done. Edit Flask/Node/Go app inside isolated session
+  </pre>
+  <ul>
+    <li>✅ Uses built-in lightweight runtimes</li>
+    <li>✅ Works on Termux, Linux, and minimal setups</li>
+    <li>✅ Ideal for mobile-code warriors & serious devs</li>
+  </ul>
+
+  <h2>🧬 Philosophy</h2>
+  <p>
+    StackLyX believes:
+    <ul>
+      <li>“One role, one mind.”</li>
+      <li>“Languages must never marry their same version.”</li>
+      <li>“You build once, update infinitely, safely.”</li>
+      <li>“You run now, not later.”</li>
+    </ul>
+  </p>
+
+  <h2>🤝 Contribute or Create Add-ons</h2>
+  <p>
+    You can create:
+    <ul>
+      <li>🔌 Plugins (tools, commands, features)</li>
+      <li>🧩 New Roles (complete subproject bundles)</li>
+      <li>🎯 Custom language handlers (version switchers)</li>
+    </ul>
+    Sell them, share them, or publish under your own brand.<br>
+    <strong>10% revenue share</strong> recommended for official listing.
+  </p>
+
+  <h2>🛡️ Licensing & Legal</h2>
+  <ul>
+    <li>✅ Free to clone, deploy, remix</li>
+    <li>❌ Do <strong>not</strong> rebrand and resell clones</li>
+    <li>✅ You can monetize plugins under fair terms</li>
+  </ul>
+  <p>
+    <strong>Protected by DMCA.</strong> Account takedowns possible for violators.<br>
+    Don’t copy — <strong>collaborate instead</strong>.
+  </p>
+
+  <h2>💼 For Sponsors & Power Users</h2>
+  <p>
+    Want to ship preloaded roles?<br>
+    Need custom integration or white-label license?
+  </p>
+  <p>
+    📬 Contact: <em>[Insert your email or GitHub discussions link]</em><br>
+    📦 Plugin marketplace launching soon!
+  </p>
+
+  <div class="center quote">
+    “Stack it your way — clean, fast, smart.”
+  </div>
+
+</body>
+</html>
