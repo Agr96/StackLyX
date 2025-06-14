@@ -78,8 +78,8 @@ EOF
 chmod +x "$START" "$STOP"
 
 # ─── Info Perpindahan Folder Manual ───────────────────
-echo -e "${YELLOW}[📂] Untuk masuk ke folder proyek Anda, jalankan perintah berikut:${RESET}"
-echo -e "${YELLOW}cd .. && cd ${NAME}${RESET}"
+echo -e "${RED}[📂] Untuk masuk ke folder proyek Anda, jalankan perintah berikut:${RESET}"
+echo -e "${RED}cd .. && cd ${NAME}${RESET}"
 
 # Hapus folder StackLyX (hasil git clone awal)
 CLONE_DIR="$(dirname "$SCRIPT_SELF")"
