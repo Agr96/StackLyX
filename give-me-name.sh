@@ -93,5 +93,5 @@ echo -e "  • Jalankan proyek menggunakan skrip di dalam core:"
 echo -e "      $START"
 echo -e "      $STOP"
 echo -e "  • Gunakan safe_update.sh di folder root proyek untuk update/rollback."
-
+cd ..
 exit 0
