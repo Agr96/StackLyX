@@ -7,7 +7,7 @@ CYAN='\033[1;36m'
 RESET='\033[0m'
 
 # Path setup
-TEMPLATE_NAME="template-name"
+TEMPLATE_NAME="template_name"
 STACKLYX_DIR="$(dirname "$(realpath "$0")")"
 SOURCE_DIR="$STACKLYX_DIR/$TEMPLATE_NAME"
 DEST_DIR="$HOME/projects/$TEMPLATE_NAME"
