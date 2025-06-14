@@ -77,10 +77,6 @@ EOF
 
 chmod +x "$START" "$STOP"
 
-# ─── Info Perpindahan Folder Manual ───────────────────
-echo -e "${RED}[📂] Untuk masuk ke folder proyek Anda, jalankan perintah berikut:${RESET}"
-echo -e "${RED}cd .. && cd ${NAME}${RESET}"
-
 # Hapus folder StackLyX (hasil git clone awal)
 CLONE_DIR="$(dirname "$SCRIPT_SELF")"
 if [[ -d "$CLONE_DIR" ]]; then
@@ -97,5 +93,9 @@ echo -e "  • Jalankan proyek menggunakan skrip di dalam core:"
 echo -e "      $START"
 echo -e "      $STOP"
 echo -e "  • Gunakan safe_update.sh di folder root proyek untuk update/rollback."
+
+# ─── Info Perpindahan Folder Manual ───────────────────
+echo -e "${CYAN}[📂] Untuk masuk ke folder proyek Anda, jalankan perintah berikut:${RESET}"
+echo -e "${CYAN}cd .. && cd ${NAME}${RESET}"
 
 exit 0
