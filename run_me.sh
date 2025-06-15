@@ -5,32 +5,32 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
+CYAN='\033[1;36m'
 RESET='\033[0m'
 
-# Path dasar
-ROOT_DIR="$HOME/projects"
-TEMPLATE_NAME="template_name"
-SOURCE_PATH="$ROOT_DIR/StackLyX/$TEMPLATE_NAME"
-TARGET_PATH="$ROOT_DIR/$TEMPLATE_NAME"
+# Lokasi dan nama template
+ROOT="$HOME/projects"
+TEMPLATE="template_name"
+SRC_DIR="$ROOT/StackLyX/$TEMPLATE"
+DEST_DIR="$ROOT/$TEMPLATE"
 
-echo -e "${BLUE}[📂] Menyalin template: $TEMPLATE_NAME ke direktori proyek...${RESET}"
-
-# Cek dan duplikat template_name
-if [[ ! -d "$SOURCE_PATH" ]]; then
-  echo -e "${RED}[❌] Folder template_name tidak ditemukan di StackLyX!${RESET}"
+# Cek eksistensi folder source
+if [[ ! -d "$SRC_DIR" ]]; then
+  echo -e "${RED}[❌] Folder template tidak ditemukan di: $SRC_DIR${RESET}"
   exit 1
 fi
 
-cp -r "$SOURCE_PATH" "$TARGET_PATH"
+# Menyalin template ke direktori project
+echo -e "${BLUE}[📂] Menyalin template: $TEMPLATE ke direktori proyek...${RESET}"
+cp -r "$SRC_DIR" "$DEST_DIR"
 
-# Jalankan tmp.sh dari dalam folder duplikat
-TMP_SCRIPT="$TARGET_PATH/tmp/tmp.sh"
-if [[ -f "$TMP_SCRIPT" ]]; then
-  echo -e "${GREEN}[🚀] Menjalankan tmp.sh untuk lanjut ke give-me-name.sh...${RESET}"
-  bash "$TMP_SCRIPT"
-else
-  echo -e "${RED}[❌] tmp.sh tidak ditemukan di $TMP_SCRIPT${RESET}"
-  exit 1
-fi
+# Menghapus folder StackLyX (bukan dijalankan otomatis lagi oleh skrip lain)
+echo -e "${YELLOW}[🧹] Menghapus folder StackLyX lama...${RESET}"
+rm -rf "$ROOT/StackLyX"
 
-exit 0
+# Panduan setelah setup
+echo -e "${GREEN}[✅] Template berhasil disiapkan!${RESET}"
+echo -e "${CYAN}📍 Sekarang Anda berada di: $DEST_DIR"
+echo -e "➡ Jalankan skrip berikut secara manual:"
+echo -e "   cd $DEST_DIR/core"
+echo -e "   ./give-me-name.sh${RESET}"
