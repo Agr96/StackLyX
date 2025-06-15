@@ -68,6 +68,14 @@ EOF
 
 chmod +x "$START" "$STOP"
 
+# ─── Bersihkan folder tmp setelah eksekusi dari tmp.sh ─────
+TMP_DIR="$PROJECT_ROOT/tmp"
+if [[ -d "$TMP_DIR" ]]; then
+  echo -e "${YELLOW}[🧹] Menghapus folder sementara tmp...${RESET}"
+  rm -rf "$TMP_DIR"
+fi
+
+
 echo -e "${GREEN}[✅] Skrip berhasil dibuat:"
 echo -e "    $START"
 echo -e "    $STOP${RESET}"
