@@ -44,12 +44,11 @@ Now simplified for every role, every project, in just a few seconds.
 ## 🧪 Quick Try
 
 ```bash
-bash run_me.sh
+bash run_me.sh```
 
 Now you copy output path after execute run_me.sh
 
-```bash
-cd [paste here]
+```cd [paste here]```
 
 you see a file named give-me-name.sh, execute it
 
