@@ -44,4 +44,43 @@ Now simplified for every role, every project, in just a few seconds.
 ## 🧪 Quick Try
 
 ```bash
-bash give_me_name.sh
+bash run_me.sh
+
+Now you copy output path after execute run_me.sh
+
+```cd [paste here]
+
+you see a file named give-me-name.sh, execute it
+
+```bash give-me-name.sh
+
+choose the name you want for your project, example: lofi
+
+Type
+```lofi
+Then enter.
+
+now start-[name].sh and stop-[name].sh is there
+
+last step for enter the editor mode you execute the start-[name].sh
+
+because in this example i gave name 'lofi' so it must be
+
+```bash start-lofi.sh
+
+and voila you are ready to start your project, you are in a new virtual terminal,
+
+This virtual terminal will remain even if you exit to the main terminal,
+
+Question:
+how to exit the virtual terminal for a while and then come back again?
+
+```tmux detach
+
+Question:
+How to get to virtual terminal? just execute start-[name].sh
+```bash start-[name].sh
+
+virtual terminal will remain even if closing the main terminal, unless you run stop-[name].sh from the main terminal,
+
+virtual terminal will remain even if closing the main terminal, 
