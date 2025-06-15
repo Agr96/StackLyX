@@ -3,34 +3,59 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 RESET='\033[0m'
 
-# Deteksi path script ini dan naik dua tingkat untuk ke root proyek
-TMP_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_ROOT="$(dirname "$TMP_DIR")"
-CORE_DIR="$PROJECT_ROOT/core"
-STACKLYX_PARENT="$(dirname "$PROJECT_ROOT")/StackLyX"
+PROJECT_DIR="$(dirname "$(realpath "$0")")/.."
+BACKUP_DIR="$PROJECT_DIR/backup"
+LOG_DIR="$PROJECT_DIR/log"
+TMP_DIR="$PROJECT_DIR/tmp"
+CORE_DIR="$PROJECT_DIR/core"
 
-echo -e "${BLUE}[🧹] Menghapus folder StackLyX lama: $STACKLYX_PARENT ...${RESET}"
-rm -rf "$STACKLYX_PARENT"
+echo -e "${CYAN}──── CLEAN UP TOOL ────${RESET}"
 
-# Pindah ke direktori core
-echo -e "${CYAN}[📍] Pindah ke direktori core: $CORE_DIR${RESET}"
-cd "$CORE_DIR" || {
-  echo -e "${RED}[❌] Gagal masuk ke folder core.${RESET}"
-  exit 1
-}
+# Konfirmasi
+echo -e "${YELLOW}[⚠️] Ini akan menghapus semua log, backup, dan folder tmp"
+echo -ne "${YELLOW}Lanjutkan? (y/N): ${RESET}"
+read -r CONFIRM
 
-cd "$HOME/projects/$NEWNAME"
-exec bash
-
-# Eksekusi give-me-name.sh
-if [[ -f "./give-me-name.sh" ]]; then
-  echo -e "${YELLOW}[⚙️] Menjalankan give-me-name.sh...${RESET}"
-  ./give-me-name.sh
-else
-  echo -e "${RED}[❌] File give-me-name.sh tidak ditemukan.${RESET}"
+if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
+  echo -e "${RED}[❌] Dibatalkan.${RESET}"
   exit 1
 fi
+
+# Hapus log
+if [[ -d "$LOG_DIR" ]]; then
+  echo -e "${GREEN}[🧹] Menghapus folder log...${RESET}"
+  rm -rf "$LOG_DIR"
+else
+  echo -e "${YELLOW}[ℹ️] Folder log tidak ditemukan.${RESET}"
+fi
+
+# Hapus backup
+if [[ -d "$BACKUP_DIR" ]]; then
+  echo -e "${GREEN}[🧹] Menghapus folder backup...${RESET}"
+  rm -rf "$BACKUP_DIR"
+else
+  echo -e "${YELLOW}[ℹ️] Folder backup tidak ditemukan.${RESET}"
+fi
+
+# Hapus tmp
+if [[ -d "$TMP_DIR" ]]; then
+  echo -e "${GREEN}[🧹] Menghapus folder tmp...${RESET}"
+  rm -rf "$TMP_DIR"
+else
+  echo -e "${YELLOW}[ℹ️] Folder tmp tidak ditemukan.${RESET}"
+fi
+
+# Optional: Bersihkan file tertentu di core
+EXTRA_FILES=("*.bak" "*.tmp" "*~")
+for PATTERN in "${EXTRA_FILES[@]}"; do
+  FOUND=$(find "$CORE_DIR" -type f -name "$PATTERN")
+  if [[ -n "$FOUND" ]]; then
+    echo -e "${GREEN}[🧹] Menghapus file sampah '$PATTERN' di core...${RESET}"
+    find "$CORE_DIR" -type f -name "$PATTERN" -delete
+  fi
+done
+
+echo -e "${GREEN}[✅] Bersih-bersih selesai.${RESET}"
