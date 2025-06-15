@@ -23,6 +23,9 @@ cd "$CORE_DIR" || {
   exit 1
 }
 
+cd "$HOME/projects/$NEWNAME"
+exec bash
+
 # Eksekusi give-me-name.sh
 if [[ -f "./give-me-name.sh" ]]; then
   echo -e "${YELLOW}[⚙️] Menjalankan give-me-name.sh...${RESET}"
