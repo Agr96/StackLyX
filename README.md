@@ -48,7 +48,8 @@ bash run_me.sh
 
 Now you copy output path after execute run_me.sh
 
-```cd [paste here]
+```bash
+cd [paste here]
 
 you see a file named give-me-name.sh, execute it
 
