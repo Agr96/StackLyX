@@ -29,3 +29,13 @@ file
 git
 
 #NEXT MISSION download all package offline via proot distro then bypass via zarchiver then upload to github
+- pindah semua file .deb ke sdcard/download
+mv ./*.deb /sdcard/Download/
+
+
+tmux_3.3a-3_arm64.deb
+libevent-core-2.1-7_2.1.12-stable-8_arm64.deb
+libutempter0_1.2.1-3_arm64.deb
+
+upload ke github sesuai path plan VISIT CANVA
+https://www.canva.com/design/DAGqqNIpp2E/yy7wRZXf-4OoeZSbKbKg7A/edit
