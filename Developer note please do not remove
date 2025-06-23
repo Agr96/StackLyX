@@ -16,4 +16,4 @@ it should be check first
 - request INPUT stores for rename stacklyx & store it separatedly inside stacklyx.conf
 - get project path
 - it will auto unpacking all deps, runtime, distro
-- now INPUT lets user choice debian as default? YES it will extract into 
+- now INPUT lets user choice debian as default? YES it will extract /stacklyx/distro/debian/debian.tar.gz into 
