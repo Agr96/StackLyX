@@ -27,3 +27,5 @@ gzip
 tar
 file
 git
+
+#NEXT MISSION download all package offline via proot distro then bypass via zarchiver then upload to github
