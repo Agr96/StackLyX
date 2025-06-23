@@ -1,0 +1,29 @@
+the main purpose in this project
+
+separated different two cpu arch
+- aarch64
+- amd64
+
+separated different two world
+- APT termux (cannot work with offline dependecy)
+- APT debian (full, via proot-distro)
+
+the apt outer proot is both arm & amd
+proot
+tmux
+curl
+wget
+tar
+
+the apt inner proot is both arm & amd
+coreutils
+procps
+tmux
+findutils
+util-linux
+grep
+sed
+gzip
+tar
+file
+git
