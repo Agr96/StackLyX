@@ -1,0 +1,19 @@
+stacklyx conceptual (client pov)
+
+new user have 2 way to get stacklyyx
+- offline: via .zip
+- online: via git clone
+
+now lets see inside
+should be like this
+
+now running run_me.sh 
+it should be check first
+
+- check no file missing
+- check device info
+- check if anything not already used, if used just tell device info
+- request INPUT stores for rename stacklyx & store it separatedly inside stacklyx.conf
+- get project path
+- it will auto unpacking all deps, runtime, distro
+- now INPUT lets user choice debian as default? YES it will extract into 
