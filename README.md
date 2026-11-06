@@ -2,98 +2,137 @@
   <img src="./images/banner.png" alt="StackLyX Banner" width="400"/>
 </p>
 
-<h1 align="center">🚀 StackLyX</h1>
+<h1 align="center">StackLyX</h1>
 
-<p align="center"><strong>30-minute setup? No thanks.</strong><br>
-We run in less than 5 seconds — effortlessly.</p>
+<p align="center">
+  Offline development environment bootstrapper untuk Termux dan Debian melalui PRoot.
+</p>
 
----
+> **Status: prototipe awal / belum siap untuk penggunaan umum.**
 
-## 💡 What is StackLyX?
+## Tentang StackLyX
 
-StackLyX is a modular runtime philosophy — for coders who value speed, clarity, and total control.  
-Inspired by the pain of multi-language setups and logic chaos.  
-Now simplified for every role, every project, in just a few seconds.
+StackLyX dibuat untuk membantu menjalankan workflow development Linux dari perangkat
+Android tanpa root. Ide utamanya adalah memisahkan:
 
-> **Deploy. Minimal resource. Done.**
+- **Termux** sebagai host environment;
+- **Debian melalui `proot-distro`** sebagai Linux userland;
+- **toolchain project** yang dapat dijalankan secara offline;
+- **sesi `tmux`** yang tetap hidup ketika terminal utama ditutup.
 
----
+Target awal proyek ini adalah perangkat Android `aarch64`, dengan rencana terpisah
+untuk `amd64`. Paket dan environment diharapkan dapat didistribusikan melalui Git,
+ZIP, atau penyimpanan lokal ketika koneksi internet terbatas.
 
-## ⚙️ Key Features
+## Mengapa proyek ini dibuat?
 
-- 🧱 Per-role language environments (Python, Go, Node, Rust…)
-- 🧰 Auto-generated shell toolchain with version isolation
-- 🧪 Testing & runtime instantly on CLI (no setup fatigue)
-- 🔄 Safe updates with rollback system
-- 🔌 Modular plugin & role system, commercial-ready
-- 🔒 DMCA-aware licensing for your peace of mind
+StackLyX berangkat dari beberapa kebutuhan:
 
----
+- menyiapkan environment coding di HP Android tanpa akses root;
+- mengurangi setup manual berulang untuk setiap project;
+- memisahkan dependency Termux dan dependency Debian;
+- menyediakan mode instalasi yang dapat bekerja dengan paket offline;
+- mempertahankan sesi development melalui `tmux`.
 
-## 🛠️ Philosophy Power
+StackLyX **bukan** pengganti Docker atau Kubernetes. Pada Android non-root,
+pendekatan berbasis PRoot lebih realistis daripada container Linux penuh karena
+Docker/Podman membutuhkan kemampuan kernel yang biasanya tidak tersedia.
 
-> No more "build from scratch" frustration.  
-> You code, StackLyX handles the rest.
+## Kondisi implementasi saat ini
 
-- Inspired by real developer pain
-- Designed for freedom, not locked containers
-- Every update respects your local data
+Repository ini masih berupa proof-of-concept. Yang tersedia saat ini:
 
----
+- beberapa script Bash untuk bootstrap dan pembuatan sesi project;
+- generator `start-[name].sh` dan `stop-[name].sh`;
+- script `safe_update.sh` dengan konsep backup dan rollback;
+- beberapa paket `.deb` untuk `aarch64`;
+- dokumentasi awal mengenai pemisahan Termux dan Debian.
 
-## 🧪 Quick Try
+Fitur berikut **belum selesai atau belum tersedia secara konsisten**:
 
-```bash
-bash run_me.sh
+- dukungan `amd64`;
+- instalasi otomatis `proot-distro` dan root filesystem Debian;
+- bundle runtime Python, Node.js, Go, atau Rust;
+- dependency cache lengkap untuk mode offline;
+- sistem role/plugin;
+- update terverifikasi dengan checksum dan rollback atomik;
+- pengujian otomatis dan distribusi release.
+
+Karena itu, script di repository ini sebaiknya dianggap sebagai bahan eksperimen,
+bukan installer yang aman untuk dipakai pada data penting.
+
+## Struktur repository
+
+```text
+.
+├── core-system/
+│   ├── give-me-name.sh
+│   ├── start-[name].sh
+│   └── stop-[name].sh
+├── global_resource/
+│   └── aarch64/binary/
+│       └── *.deb
+├── images/
+├── docs/
+├── run_me.sh
+├── safe_update.sh
+└── name.txt
 ```
 
-Now you copy output path after execute run_me.sh
+## Percobaan lokal
+
+Pastikan Anda memahami isi script sebelum menjalankannya. Beberapa script
+mengasumsikan struktur direktori Termux tertentu dan belum melakukan validasi
+dependency secara lengkap.
 
 ```bash
-cd [paste here]
+bash -n run_me.sh safe_update.sh core-system/*.sh
 ```
 
-you see a file named give-me-name.sh, execute it
+Alur prototipe yang direncanakan:
 
-```bash
-give-me-name.sh
+```text
+Termux
+  └── project directory
+      ├── generator nama project
+      ├── start-[name].sh
+      ├── stop-[name].sh
+      └── tmux session
 ```
 
-choose the name you want for your project, example: lofi
+## Batasan teknis
 
-Type
-```bash
-lofi
-```
-Then enter.
+- PRoot bukan virtual machine dan bukan container dengan isolasi kernel penuh.
+- Performa filesystem dan syscall dapat lebih lambat dibanding Linux native.
+- Sebagian software yang membutuhkan privilege kernel tidak akan berjalan.
+- Paket `.deb` harus cocok dengan arsitektur dan distro target.
+- Paket untuk `aarch64` tidak dapat dipakai pada `amd64`, dan sebaliknya.
+- Mode offline memerlukan seluruh dependency transitif, bukan hanya paket utama.
+- Menjalankan script yang belum diverifikasi dapat mengubah atau menghapus file lokal.
 
-now start-[name].sh and stop-[name].sh is there
+## Arah pengembangan
 
-last step for enter the editor mode you execute the start-[name].sh
+Prioritas pengembangan yang realistis:
 
-because in this example i gave name 'lofi' so it must be
+1. Fokus pada Android `aarch64` dan Termux.
+2. Tambahkan pemeriksaan dependency, arsitektur, ruang disk, dan path.
+3. Sediakan Debian rootfs yang versioned dan memiliki checksum.
+4. Pisahkan data pengguna dari core StackLyX.
+5. Buat update atomik dengan backup yang dapat diverifikasi.
+6. Tambahkan smoke test untuk setiap script.
+7. Setelah MVP stabil, baru pertimbangkan `amd64`, runtime tambahan, dan plugin.
 
-```bash
-start-lofi.sh
-```
+## Kapan StackLyX cocok digunakan?
 
-and voila you are ready to start your project, you are in a new virtual terminal,
+StackLyX cocok untuk eksperimen, pembelajaran, dan workflow coding ringan di
+Android tanpa root, khususnya ketika pengguna membutuhkan environment yang dapat
+dipindahkan dan tersedia secara offline.
 
-This virtual terminal will remain even if you exit to the main terminal,
+Untuk Linux desktop atau server, gunakan solusi yang lebih matang seperti
+Dev Containers, Docker/Podman, `mise`, `uv`, atau Nix sesuai kebutuhan.
 
-Question:
-how to exit the virtual terminal for a while and then come back again?
+## Lisensi
 
-```bash
-tmux detach
-```
-
-Question:
-How to get to virtual terminal? just execute start-[name].sh
-```bash
-start-[name].sh
-```
-
-virtual terminal will remain even if closing the main terminal, unless you run stop-[name].sh from the main terminal,
-
-virtual terminal will remain even if closing the main terminal, 
+Repository ini belum memiliki file lisensi resmi. Jangan menganggap kode ini
+memiliki izin penggunaan, redistribusi, atau komersialisasi tertentu sebelum
+lisensi ditambahkan.
